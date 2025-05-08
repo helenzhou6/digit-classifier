@@ -2,6 +2,7 @@
 # To run file, refer to README
 
 import torch
+from torch.utils.data import DataLoader
 from torch import nn
 
 import torchvision
@@ -14,7 +15,7 @@ import matplotlib.pyplot as plt
 # 1. SETUP TRAINING AND TESTING DATA
 # - MNIST is database of handwritten digits, see https://en.wikipedia.org/wiki/MNIST_database
 train_data = datasets.MNIST(
-    root="data", # where to download data to?
+    root="data", # downloads to local data folder
     train=True, # get training data
     download=True, # download data if it doesn't exist on disk
     transform=ToTensor(), # images come as PIL format, we want to turn into Torch tensors
@@ -30,19 +31,37 @@ test_data = datasets.MNIST(
 
 # -- Info on the MNIST first training and testing data
 
-# - MNIST consists of images that are grayscale (color_channels=1) and height=28px by width=28px
+# - MNIST consists of images that are grayscale (color_channels=1) and height=28px by width=28px (see image.shape)
 image, label = train_data[0]
-# print(image.shape) 
 
 # - There are 60,000 training samples and 10,000 testing samples.
 # print(len(train_data.data), len(train_data.targets), len(test_data.data), len(test_data.targets))
 
 # - There are 10 classes - '0 - zero' ... to '9 - nine'. Therefore a multi-class classification
-# class_names = train_data.classes
-# print(class_names)
+class_names = train_data.classes
 
 # 2. VISUALISE THE DATA
-print(f"Image shape: {image.shape}")
-plt.imshow(image.squeeze()) # image shape is [1, 28, 28] (colour channels, height, width)
-plt.title(label);
-plt.show()
+# plt.imshow(image.squeeze(), cmap="gray")
+# plt.title(class_names[label]);
+# plt.axis("Off");
+# plt.show()
+
+# 3. Prepare DataLoader
+# Turn datasets into iterables (batches of 32)
+BATCH_SIZE = 32
+train_dataloader = DataLoader(train_data, # dataset to turn into iterable
+    batch_size=BATCH_SIZE,
+    shuffle=True
+)
+test_dataloader = DataLoader(test_data,
+    batch_size=BATCH_SIZE,
+    shuffle=False # don't necessarily have to shuffle the testing data
+)
+print(f"Length of train dataloader: {len(train_dataloader)} batches of {BATCH_SIZE}")
+# Length of train dataloader: 1875 batches of 32
+print(f"Length of test dataloader: {len(test_dataloader)} batches of {BATCH_SIZE}")
+# Length of test dataloader: 313 batches of 32
+
+# Inside the training dataloader
+train_features_batch, train_labels_batch = next(iter(train_dataloader))
+print(train_features_batch.shape, train_labels_batch.shape)
