@@ -100,19 +100,40 @@ hidden_units = 10
 output_shape=len(class_names)
 
 torch.manual_seed(42) # sets the seed for generating random numbers to ensure random numbers are generated the same each time run the code
+device="cpu"
+
 model_0 = MNISTModelV0(input_shape,
     hidden_units,
     output_shape
 )
-device="cpu"
-model_0.to(device) 
+model_0.to(device)
+
+# 6. Model v1 with non-linearity and linear layers
+class FashionMNISTModelV1(nn.Module):
+    def __init__(self, input_shape: int, hidden_units: int, output_shape: int):
+        super().__init__()
+        self.layer_stack = nn.Sequential(
+            nn.Flatten(), # flatten inputs into single vector
+            nn.Linear(in_features=input_shape, out_features=hidden_units),
+            nn.ReLU(), # non-linear functions added in between each linear layer
+            nn.Linear(in_features=hidden_units, out_features=output_shape),
+            nn.ReLU()
+        )
+    def forward(self, x: torch.Tensor):
+        return self.layer_stack(x)
+
+model_1 = FashionMNISTModelV1(input_shape=784, # number of input features
+    hidden_units=10,
+    output_shape=len(class_names) # number of output classes desired
+).to(device)
 
 # 5. Set up loss, optimizer and evaluation metrics
 # Set up accuracy metric
 accuracy_fn = torchmetrics.Accuracy(task = 'multiclass', num_classes=len(class_names)).to(device)
 # Setup loss function and optimizer
 loss_fn = nn.CrossEntropyLoss() # this is also called "criterion"/"cost function" in some places
-optimizer = torch.optim.SGD(params=model_0.parameters(), lr=0.1)
+model_0_optimizer = torch.optim.SGD(params=model_0.parameters(), lr=0.1)
+model_1_optimizer = torch.optim.SGD(params=model_1.parameters(), lr=0.1)
 
 # 6. Create training & testing loop. Train model 0 on batches of data
 epochs = 3 # number of epochs (i.e. complete pass through the complete dataset. set as small for faster training times)
@@ -129,11 +150,11 @@ for epoch in tqdm(range(epochs)):
         loss = loss_fn(y_pred, y)
         train_loss += loss # accumulatively add up the loss per epoch 
         # 3. Optimizer zero grad
-        optimizer.zero_grad()
+        model_0_optimizer.zero_grad()
         # 4. Loss backward
         loss.backward()
         # 5. Optimizer step
-        optimizer.step()
+        model_0_optimizer.step()
 
         if batch % 400 == 0:
             print(f"Looked at {batch * len(X)}/{len(train_dataloader.dataset)} samples")
