@@ -11,7 +11,6 @@ from torchvision.transforms import ToTensor
 
 import matplotlib.pyplot as plt
 
-
 # 1. SETUP TRAINING AND TESTING DATA
 # - MNIST is database of handwritten digits, see https://en.wikipedia.org/wiki/MNIST_database
 train_data = datasets.MNIST(
@@ -57,11 +56,49 @@ test_dataloader = DataLoader(test_data,
     batch_size=BATCH_SIZE,
     shuffle=False # don't necessarily have to shuffle the testing data
 )
-print(f"Length of train dataloader: {len(train_dataloader)} batches of {BATCH_SIZE}")
+# print(f"Length of train dataloader: {len(train_dataloader)} batches of {BATCH_SIZE}")
 # Length of train dataloader: 1875 batches of 32
-print(f"Length of test dataloader: {len(test_dataloader)} batches of {BATCH_SIZE}")
+# print(f"L÷ength of test dataloader: {len(test_dataloader)} batches of {BATCH_SIZE}")
 # Length of test dataloader: 313 batches of 32
 
 # Inside the training dataloader
-train_features_batch, train_labels_batch = next(iter(train_dataloader))
-print(train_features_batch.shape, train_labels_batch.shape)
+# train_features_batch, train_labels_batch = next(iter(train_dataloader))
+# print(train_features_batch.shape, train_labels_batch.shape)
+
+# 4. Build a baseline model (model 0 - one of the simplest models, used as a starting point)
+# Create a flatten layer - compresses the dimensions of a tensor into a single feature vector (height*width)
+# because nn.Linear() layers like inputs to be in the form of feature vectors
+
+# EXAMPLE: Get a single sample and flatten the sample
+# flatten_model = nn.Flatten() # all nn modules function as a model (can do a forward pass)
+# x = train_features_batch[0]
+# output = flatten_model(x) # perform forward pass
+# print(f"Shape before flattening: {x.shape} -> [color_channels, height, width] VS after flattening: {output.shape} -> [color_channels, height*width]")
+
+# 4a. Baseline model class 
+class MNISTModelV0(nn.Module):
+    def __init__(self, input_shape: int, hidden_units: int, output_shape: int):
+        super().__init__()
+        self.layer_stack = nn.Sequential(
+            nn.Flatten(), # neural networks like their inputs in vector form
+            nn.Linear(in_features=input_shape, out_features=hidden_units), # in_features = number of features in a data sample
+            nn.Linear(in_features=hidden_units, out_features=output_shape)
+        )
+    
+    def forward(self, x):
+        return self.layer_stack(x)
+    
+# 4b. Instantiate/setup a model
+# number of features in the model, for here it's one for every pixel (28 pixels high x 28 pixels wide = 784 features).
+input_shape = 784 
+# number of units/neurons in the hidden layer, can be whatever you want but to keep the model small start with 10.
+hidden_units = 10 
+# since we're working with a multi-class classification problem, we need an output neuron per class in our dataset.
+output_shape=len(class_names)
+
+torch.manual_seed(42) # sets the seed for generating random numbers to ensure random numbers are generated the same each time run the code
+model_0 = MNISTModelV0(input_shape,
+    hidden_units,
+    output_shape
+)
+model_0.to("cpu") 
