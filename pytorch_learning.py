@@ -11,6 +11,9 @@ from torchvision.transforms import ToTensor
 
 import matplotlib.pyplot as plt
 
+import torchmetrics
+from tqdm.auto import tqdm
+
 # 1. SETUP TRAINING AND TESTING DATA
 # - MNIST is database of handwritten digits, see https://en.wikipedia.org/wiki/MNIST_database
 train_data = datasets.MNIST(
@@ -101,4 +104,60 @@ model_0 = MNISTModelV0(input_shape,
     hidden_units,
     output_shape
 )
-model_0.to("cpu") 
+device="cpu"
+model_0.to(device) 
+
+# 5. Set up loss, optimizer and evaluation metrics
+# Set up accuracy metric
+accuracy_fn = torchmetrics.Accuracy(task = 'multiclass', num_classes=len(class_names)).to(device)
+# Setup loss function and optimizer
+loss_fn = nn.CrossEntropyLoss() # this is also called "criterion"/"cost function" in some places
+optimizer = torch.optim.SGD(params=model_0.parameters(), lr=0.1)
+
+# 5. Create training & testing loop. Train model 0 on batches of data
+epochs = 3 # number of epochs (i.e. complete pass through the complete dataset. set as small for faster training times)
+for epoch in tqdm(range(epochs)):
+    print(f"Epoch: {epoch}\n-------")
+    ### Training
+    train_loss = 0
+    # Add a loop to loop through training batches
+    for batch, (X, y) in enumerate(train_dataloader):
+        model_0.train() 
+        # 1. Forward pass (perform training steps)
+        y_pred = model_0(X)
+        # 2. Calculate loss (per batch)
+        loss = loss_fn(y_pred, y)
+        train_loss += loss # accumulatively add up the loss per epoch 
+        # 3. Optimizer zero grad
+        optimizer.zero_grad()
+        # 4. Loss backward
+        loss.backward()
+        # 5. Optimizer step
+        optimizer.step()
+
+        if batch % 400 == 0:
+            print(f"Looked at {batch * len(X)}/{len(train_dataloader.dataset)} samples")
+    # Divide total train loss by length of train dataloader (average train loss per batch per epoch)
+    train_loss /= len(train_dataloader)
+    
+    ### Testing
+    # Setup variables for accumulatively adding up loss and accuracy 
+    test_loss, test_acc = 0, 0 
+    model_0.eval()
+    with torch.inference_mode():
+        for X, y in test_dataloader:
+            # 1. Forward pass
+            test_pred = model_0(X)
+            # 2. Calculate loss (accumulatively)
+            test_loss += loss_fn(test_pred, y) # accumulatively add up the loss per epoch
+            # 3. Calculate accuracy (preds need to be same as y_true)
+            test_acc += accuracy_fn(y, test_pred.argmax(dim=1))
+        
+        # Calculations on test metrics need to happen inside torch.inference_mode()
+        # Divide total test loss by length of test dataloader (per batch)
+        test_loss /= len(test_dataloader)
+
+        # Divide total accuracy by length of test dataloader (per batch)
+        test_acc /= len(test_dataloader)
+
+    print(f"\nTrain loss: {train_loss:.5f} | Test loss: {test_loss:.5f}, Test acc: {test_acc:.2f}%\n")
