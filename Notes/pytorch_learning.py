@@ -140,7 +140,7 @@ def train_step(model: torch.nn.Module,
                accuracy_fn):
     train_loss, train_acc = 0, 0
     for batch, (X, y) in enumerate(data_loader): # Add a loop to loop through training batches
-        model_0.train()
+        model.train()
         # 1. Forward pass (perform training steps)
         y_pred = model(X)
         # 2. Calculate loss
