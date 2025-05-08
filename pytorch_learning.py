@@ -40,3 +40,9 @@ image, label = train_data[0]
 # - There are 10 classes - '0 - zero' ... to '9 - nine'. Therefore a multi-class classification
 # class_names = train_data.classes
 # print(class_names)
+
+# 2. VISUALISE THE DATA
+print(f"Image shape: {image.shape}")
+plt.imshow(image.squeeze()) # image shape is [1, 28, 28] (colour channels, height, width)
+plt.title(label);
+plt.show()
