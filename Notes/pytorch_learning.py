@@ -157,7 +157,7 @@ def train_step(model: torch.nn.Module,
     # Divide total train loss & accuracy by length of train dataloader (average train loss & accuracy per batch per epoch)
     train_loss /= len(data_loader)
     train_acc /= len(data_loader)
-    print(f"Train loss: {train_loss:.5f} | Train accuracy: {train_acc:.2f}%")
+    print(f"Train loss: {train_loss:.5f} | Train accuracy: {(train_acc*100):.2f}%")
 
 def test_step(data_loader: torch.utils.data.DataLoader,
               model: torch.nn.Module,
@@ -179,7 +179,7 @@ def test_step(data_loader: torch.utils.data.DataLoader,
         test_loss /= len(data_loader)
         # Divide total accuracy by length of test dataloader (per batch)
         test_acc /= len(data_loader)
-        print(f"Test loss: {test_loss:.5f} | Test accuracy: {test_acc:.2f}%\n")
+        print(f"Test loss: {test_loss:.5f} | Test accuracy: {(test_acc*100):.2f}%\n")
 
 # 6. Train and test each model
 epochs = 3 # number of epochs (i.e. complete pass through the complete dataset. set as small for faster training times)
@@ -245,7 +245,7 @@ def eval_model(model: torch.nn.Module,
         
     return {"model_name": model.__class__.__name__, # only works when model was created with a class
             "model_loss": f"{loss.item():.5f}%",
-            "model_acc": f"{acc:.2f}%"}
+            "model_acc": f"{(acc*100):.2f}%"}
 
 # Calculate model results using test dataset
 model_0_results = eval_model(model=model_0, data_loader=test_dataloader,

@@ -71,25 +71,25 @@ def train_step(model: torch.nn.Module,
                data_loader: torch.utils.data.DataLoader,
                loss_fn: torch.nn.Module,
                optimizer: torch.optim.Optimizer,
-               accuracy_fn):
+               accuracy_fn: torchmetrics.classification.Accuracy):
     train_loss, train_acc = 0, 0
     for batch, (X, y) in enumerate(data_loader):
         model.train()
         y_pred = model(X)
         loss = loss_fn(y_pred, y)
         train_loss += loss 
-        train_acc += accuracy_fn(y, y_pred.argmax(dim=1)) 
+        train_acc += accuracy_fn(y_pred.argmax(dim=1), y) 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
     train_loss /= len(data_loader)
     train_acc /= len(data_loader)
-    print(f"Train loss: {train_loss:.5f} | Train accuracy: {train_acc:.2f}%")
+    print(f"Train loss: {train_loss:.5f} | Train accuracy: {(train_acc*100):.2f}%")
 
 epochs = 3 
 for epoch in range(epochs):
-    print(f"Training: Epoch {epoch + 1} out of {epochs}\n---------")
+    print(f"---------\nTraining: Epoch {epoch + 1} out of {epochs}")
     train_step(data_loader=train_dataloader, 
         model=model_v1, 
         loss_fn=loss_fn,
@@ -101,21 +101,25 @@ for epoch in range(epochs):
 def eval_model(data_loader: torch.utils.data.DataLoader,
                model: torch.nn.Module, 
                loss_fn: torch.nn.Module, 
-               accuracy_fn):
+               accuracy_fn: torchmetrics.classification.Accuracy):
     loss, acc = 0, 0
     model.eval()
     with torch.inference_mode():
         for X, y in data_loader:
             y_pred = model(X)
             loss += loss_fn(y_pred, y)
-            acc += accuracy_fn(y, y_pred.argmax(dim=1))
+            acc += accuracy_fn(y_pred.argmax(dim=1), y)
         loss /= len(data_loader)
         acc /= len(data_loader)
         
-    return {"model_loss": f"{loss.item():.5f}%",
-            "model_acc": f"{acc:.2f}%"}
+    return {"model_loss": loss.item(),
+            "model_acc": acc*100}
 
 model_v1_results = eval_model(data_loader=test_dataloader, model=model_v1,
     loss_fn=loss_fn, accuracy_fn=accuracy_fn
 )
-print(model_v1_results)
+print(f"Model test results: loss={model_v1_results['model_loss']:.5f}%, accuracy={model_v1_results['model_acc']:.2f}%")
+if model_v1_results['model_loss'] < 0.5 and model_v1_results['model_acc'].item() > 90:
+    print("PASSED - model is usable")
+else:
+    print("FAILED - model is unusable")
