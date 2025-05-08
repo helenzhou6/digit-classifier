@@ -1,5 +1,4 @@
 # To run file, refer to README
-
 import torch
 from torch.utils.data import DataLoader
 from torch import nn
@@ -73,7 +72,7 @@ def train_step(model: torch.nn.Module,
                optimizer: torch.optim.Optimizer,
                accuracy_fn: torchmetrics.classification.Accuracy):
     train_loss, train_acc = 0, 0
-    for batch, (X, y) in enumerate(data_loader):
+    for _, (X, y) in enumerate(data_loader):
         model.train()
         y_pred = model(X)
         loss = loss_fn(y_pred, y)
