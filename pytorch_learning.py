@@ -12,7 +12,6 @@ from torchvision.transforms import ToTensor
 import matplotlib.pyplot as plt
 
 import torchmetrics
-from tqdm.auto import tqdm
 
 # 1. SETUP TRAINING AND TESTING DATA
 # - MNIST is database of handwritten digits, see https://en.wikipedia.org/wiki/MNIST_database
@@ -107,7 +106,7 @@ model_0 = MNISTModelV0(input_shape,
 ).to(device)
 
 # 4b. Model v1 with non-linearity and linear layers
-class FashionMNISTModelV1(nn.Module):
+class MNISTModelV1(nn.Module):
     def __init__(self, input_shape: int, hidden_units: int, output_shape: int):
         super().__init__()
         self.layer_stack = nn.Sequential(
@@ -120,7 +119,7 @@ class FashionMNISTModelV1(nn.Module):
     def forward(self, x: torch.Tensor):
         return self.layer_stack(x)
 
-model_1 = FashionMNISTModelV1(input_shape=784, # number of input features
+model_1 = MNISTModelV1(input_shape=784, # number of input features
     hidden_units=10,
     output_shape=len(class_names) # number of output classes desired
 ).to(device)
@@ -186,9 +185,8 @@ def test_step(data_loader: torch.utils.data.DataLoader,
 epochs = 3 # number of epochs (i.e. complete pass through the complete dataset. set as small for faster training times)
 
 # 6a. Train and test model v0
-for epoch in tqdm(range(epochs)):
-    print("MODEL v0\n")
-    print(f"Epoch: {epoch}\n---------")
+for epoch in range(epochs):
+    print(f"MODEL v0: Epoch: {epoch + 1} out of {epochs}\n---------")
     train_step(data_loader=train_dataloader, 
         model=model_0, 
         loss_fn=loss_fn,
@@ -202,9 +200,8 @@ for epoch in tqdm(range(epochs)):
     )
 
 # 6b. Train and test model v1
-for epoch in tqdm(range(epochs)):
-    print("MODEL v1\n")
-    print(f"Epoch: {epoch}\n---------")
+for epoch in range(epochs):
+    print(f"MODEL v1: Epoch: {epoch + 1} out of {epochs}\n---------")
     train_step(data_loader=train_dataloader, 
         model=model_1, 
         loss_fn=loss_fn,
@@ -217,41 +214,46 @@ for epoch in tqdm(range(epochs)):
         accuracy_fn=accuracy_fn
     )
 
-# # 7. Make predictions and get modelresults
-# def eval_model(model: torch.nn.Module, 
-#                data_loader: torch.utils.data.DataLoader, 
-#                loss_fn: torch.nn.Module, 
-#                accuracy_fn):
-#     """Returns a dictionary containing the results of model predicting on data_loader.
-#     Args:
-#         model (torch.nn.Module): A PyTorch model capable of making predictions on data_loader.
-#         data_loader (torch.utils.data.DataLoader): The target dataset to predict on.
-#         loss_fn (torch.nn.Module): The loss function of model.
-#         accuracy_fn: An accuracy function to compare the models predictions to the truth labels.
-#     Returns:
-#         (dict): Results of model making predictions on data_loader.
-#     """
-#     loss, acc = 0, 0
-#     model.eval()
-#     with torch.inference_mode():
-#         for X, y in data_loader:
-#             # Make predictions with the model
-#             y_pred = model(X)
+# 7. Make predictions and get model results
+def eval_model(model: torch.nn.Module, 
+               data_loader: torch.utils.data.DataLoader, 
+               loss_fn: torch.nn.Module, 
+               accuracy_fn):
+    """Returns a dictionary containing the results of model predicting on data_loader.
+    Args:
+        model (torch.nn.Module): A PyTorch model capable of making predictions on data_loader.
+        data_loader (torch.utils.data.DataLoader): The target dataset to predict on.
+        loss_fn (torch.nn.Module): The loss function of model.
+        accuracy_fn: An accuracy function to compare the models predictions to the truth labels.
+    Returns:
+        (dict): Results of model making predictions on data_loader.
+    """
+    loss, acc = 0, 0
+    model.eval()
+    with torch.inference_mode():
+        for X, y in data_loader:
+            # Make predictions with the model
+            y_pred = model(X)
             
-#             # Accumulate the loss and accuracy values per batch
-#             loss += loss_fn(y_pred, y)
-#             acc += accuracy_fn(y, y_pred.argmax(dim=1)) # For accuracy, need the prediction labels (logits -> pred_prob -> pred_labels)
+            # Accumulate the loss and accuracy values per batch
+            loss += loss_fn(y_pred, y)
+            acc += accuracy_fn(y, y_pred.argmax(dim=1)) # For accuracy, need the prediction labels (logits -> pred_prob -> pred_labels)
         
-#         # Scale loss and acc to find the average loss/acc per batch
-#         loss /= len(data_loader)
-#         acc /= len(data_loader)
+        # Scale loss and acc to find the average loss/acc per batch
+        loss /= len(data_loader)
+        acc /= len(data_loader)
         
-#     return {"model_name": model.__class__.__name__, # only works when model was created with a class
-#             "model_loss": f"{loss.item():.5f}%",
-#             "model_acc": f"{acc:.2f}%"}
+    return {"model_name": model.__class__.__name__, # only works when model was created with a class
+            "model_loss": f"{loss.item():.5f}%",
+            "model_acc": f"{acc:.2f}%"}
 
-# # Calculate model 0 results on test dataset
-# model_0_results = eval_model(model=model_0, data_loader=test_dataloader,
-#     loss_fn=loss_fn, accuracy_fn=accuracy_fn
-# )
-# print(model_0_results)
+# Calculate model results using test dataset
+model_0_results = eval_model(model=model_0, data_loader=test_dataloader,
+    loss_fn=loss_fn, accuracy_fn=accuracy_fn
+)
+print(model_0_results)
+
+model_1_results = eval_model(model=model_1, data_loader=test_dataloader,
+    loss_fn=loss_fn, accuracy_fn=accuracy_fn
+)
+print(model_1_results)
