@@ -10,8 +10,9 @@ def predict_digit_using_model(tensor_digit):
         output = model_v1(tensor_digit)
         probs = torch.nn.functional.softmax(output, dim=1)
         conf, predicted_class = torch.max(probs, 1)
-    print(f"Predicted digit: {predicted_class.item()}")
-    print(f"Confidence score: {(conf.item()*100):.2f}%")
+        predicted_digit = predicted_class.item()
+        conf_percent = conf.item()*100
+    return predicted_digit, conf_percent
 
 transform_to_tensor = Compose([
     Resize((28, 28)),
@@ -33,5 +34,5 @@ def process_image(uint8_img):
     return tensor_digit
 
 def predict_digit(uint8_img):
-        tensor_digit = process_image(uint8_img)
-        predict_digit_using_model(tensor_digit)
+    tensor_digit = process_image(uint8_img)
+    return predict_digit_using_model(tensor_digit)
