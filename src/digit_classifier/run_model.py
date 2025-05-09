@@ -4,7 +4,7 @@ from PIL import Image
 
 from digit_classifier.create_model import model_v1
 
-def predict_digit_using_model(tensor_digit):
+def _predict_digit_using_model(tensor_digit):
     model_v1.eval()
     with torch.no_grad():
         output = model_v1(tensor_digit)
@@ -14,25 +14,25 @@ def predict_digit_using_model(tensor_digit):
         conf_percent = conf.item()*100
     return predicted_digit, conf_percent
 
-transform_to_tensor = Compose([
+_transform_to_tensor = Compose([
     Resize((28, 28)),
     ToTensor(),
 ])
 
-def validate_digit_properties(tensor_digit):
+def _validate_digit_properties(tensor_digit):
     if tensor_digit.dtype is not torch.float32:
           raise Exception(f"Incorrect type - tensor digit should be torch.float32, instead was {tensor_digit.dtype}")
     if tensor_digit.shape != torch.Size([1, 28, 28]):
           raise Exception(f"Incorrect type - tensor digit should be torch.Size([1, 28, 28]), instead was {tensor_digit.shape}")
     
-def process_image(uint8_img):
-    #  Process image from 280 pixel x 280 pixel, 4 colour channels (3 RGB + 1 alpha) uint8 to tensor
+def _process_image(uint8_img):
+    #  Process image from 280 pixel x 280 pixel, 4 colour channels (3 RGB + 1 alpha) uint8 to tensor (that is 28 x 28 and 1 greyscale channel)
     drawn_image = Image.fromarray(uint8_img)
     drawn_image_grey = drawn_image.convert("L") # convert to grayscale
-    tensor_digit = transform_to_tensor(drawn_image_grey)
-    validate_digit_properties(tensor_digit)
+    tensor_digit = _transform_to_tensor(drawn_image_grey)
+    _validate_digit_properties(tensor_digit)
     return tensor_digit
 
 def predict_digit(uint8_img):
-    tensor_digit = process_image(uint8_img)
-    return predict_digit_using_model(tensor_digit)
+    tensor_digit = _process_image(uint8_img)
+    return _predict_digit_using_model(tensor_digit)

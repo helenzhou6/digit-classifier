@@ -3,11 +3,8 @@ import torch
 from torch.utils.data import DataLoader
 from torch import nn
 
-import torchvision
 from torchvision import datasets
 from torchvision.transforms import ToTensor
-
-import matplotlib.pyplot as plt
 
 import torchmetrics
 
@@ -66,7 +63,7 @@ accuracy_fn = torchmetrics.Accuracy(task = 'multiclass', num_classes=len(class_n
 loss_fn = nn.CrossEntropyLoss()
 model_v1_optimizer = torch.optim.SGD(params=model_v1.parameters(), lr=0.1)
 
-def train_step(model: torch.nn.Module,
+def _train_step(model: torch.nn.Module,
                data_loader: torch.utils.data.DataLoader,
                loss_fn: torch.nn.Module,
                optimizer: torch.optim.Optimizer,
@@ -89,7 +86,7 @@ def train_step(model: torch.nn.Module,
 epochs = 3
 for epoch in range(epochs):
     print(f"---------\nTraining: Epoch {epoch + 1} out of {epochs}")
-    train_step(data_loader=train_dataloader, 
+    _train_step(data_loader=train_dataloader, 
         model=model_v1, 
         loss_fn=loss_fn,
         optimizer=model_v1_optimizer,
@@ -97,7 +94,7 @@ for epoch in range(epochs):
     )
 
 # 4. Evaluade the model and get accuracy metrics
-def eval_model(data_loader: torch.utils.data.DataLoader,
+def _eval_model(data_loader: torch.utils.data.DataLoader,
                model: torch.nn.Module, 
                loss_fn: torch.nn.Module, 
                accuracy_fn: torchmetrics.classification.Accuracy):
@@ -114,11 +111,13 @@ def eval_model(data_loader: torch.utils.data.DataLoader,
     return {"model_loss": loss.item(),
             "model_acc": acc*100}
 
-model_v1_results = eval_model(data_loader=test_dataloader, model=model_v1,
+model_v1_results = _eval_model(data_loader=test_dataloader, model=model_v1,
     loss_fn=loss_fn, accuracy_fn=accuracy_fn
 )
-print(f"Model test results: loss={model_v1_results['model_loss']:.5f}%, accuracy={model_v1_results['model_acc']:.2f}%")
+model_results_loss = model_v1_results['model_loss']
+model_results_accuracy = model_v1_results['model_acc'].item()
 if model_v1_results['model_loss'] < 0.5 and model_v1_results['model_acc'].item() > 90:
+    print(f"Model test results: loss={model_results_loss:.5f}%, accuracy={model_results_accuracy:.2f}%")
     print("PASSED - model is usable")
 else:
-    print("FAILED - model is unusable")
+    raise Exception(f"Machine learning model not usable - since model_loss was > 0.5 at {model_results_loss} and accuracy was < 90 at {model_results_accuracy}")
