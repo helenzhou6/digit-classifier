@@ -1,0 +1,29 @@
+[project]
+name = "digit-classifier"
+version = "0.0.1"
+description = "Digit Classifier uses an ML model (trained on the MNIST dataset) to classify a digit drawn by the user"
+authors = [
+    {name = "Helen Zhou"}
+]
+license = {text = "MIT License"}
+readme = "README.md"
+requires-python = "=3.9.6"
+dependencies = [
+    "torch (<=2.2.2)",
+    "torchvision (<=0.17.2)",
+    "numpy (<2.0)",
+    "torchmetrics (<=1.7.1)",
+    "streamlit (<=1.45.0)",
+    "streamlit-drawable-canvas (<=0.9.3)"
+]
+
+[tool.poetry]
+name = "digit-classifier"
+
+[tool.poetry.group.dev.dependencies]
+matplotlib = "<=3.9.4"
+matplotlib-terminal = "^0.1a4"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

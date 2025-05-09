@@ -6,13 +6,19 @@ Objective: Build a MNIST digit Classifier. See https://programme.mlx.institute/i
 
 ## Dev
 
-To run the python files:
-1. Ensure you have virtualenv installed to activate python virtual env (`pip3 install virtualenv`).
-    - (To deactivate virtual env if needed, run `deactivate`)
-2. `python3 -m venv env` and to activate `source env/bin/activate`
-3. `pip install -r requirements.txt` to install project requirements
+### Prerequisites
+Needed:
+- Python (v3.9.6)
+- Poetry (`brew install poetry` or see https://python-poetry.org/ to install. v2.1.3 or higher)
 
-To run front end, run the script: `streamlit run src/app.py` and it will create a localhost URL to view. 
+### To run
+To run the python files:
+1. Ensure poetry is using python v3.9.6 (see commands listed: https://python-poetry.org/docs/managing-environments/ - e.g. using `poetry env use 3.9`)
+2. `poetry env activate` to use the poetry virtual environment created
+    - (To deactivate virtual env if needed, run `deactivate`)
+3. `poetry install` to install project requirements
+
+To run front end, run the script: `streamlit run src/digit_classifier/app.py` and it will create a localhost URL to view. 
 
 ---
 

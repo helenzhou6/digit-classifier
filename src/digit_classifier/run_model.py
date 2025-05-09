@@ -1,7 +1,7 @@
 import torch
 import matplotlib.pyplot as plt
 
-from create_model import model_v1, test_data, class_names
+from digit_classifier.create_model import model_v1, test_data, class_names
 
 # 5. Test out with an input
 image, label = test_data[201]
