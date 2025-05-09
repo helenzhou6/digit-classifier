@@ -11,7 +11,6 @@ st.markdown(
     """
 )
 
-# Create a canvas component
 canvas_result = st_canvas(
     stroke_width=20,
     stroke_color="#fff",
@@ -34,3 +33,16 @@ def on_button_click():
 st.button(label="Predict", type="primary", on_click=on_button_click)
 
 st.write(st.session_state['text'])
+
+with st.form(key="feedback-form"):
+    st.write("How did 🤖 do? Give it feedback by writing in what the actual digit was")
+    num_input = st.number_input(
+        label="Input the 'true' digit",
+        min_value=0,
+        max_value=9,
+        value=0,
+        step=1,
+    )
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        st.write("Thanks for the feedback! Will reward/punish 🤖 accordingly. (Joke - no robots were harmed in the making of this app)")
