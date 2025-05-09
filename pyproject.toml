@@ -21,8 +21,6 @@ dependencies = [
 name = "digit-classifier"
 
 [tool.poetry.group.dev.dependencies]
-matplotlib = "<=3.9.4"
-matplotlib-terminal = "^0.1a4"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

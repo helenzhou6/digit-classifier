@@ -54,3 +54,6 @@ Live example of the application: https://mnist-example.mlx.institute
 - Add your project to GitHub.
 - Make sure to include a README with a link to the live application.
 - Share the link to your GitHub repository with us via the application form.
+
+## Resources
+- Tutorial used to learn Machine learning on pytorch: # Tutorial to learn pytorch adapted from https://www.learnpytorch.io/03_pytorch_computer_vision/ 

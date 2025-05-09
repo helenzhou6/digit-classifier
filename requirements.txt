@@ -1,8 +1,0 @@
-torch
-torchvision
-matplotlib
-numpy<2.0
-matplotlib-terminal
-torchmetrics
-streamlit
-streamlit_drawable_canvas
