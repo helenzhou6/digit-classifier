@@ -4,6 +4,7 @@ from datetime import datetime
 
 from digit_classifier.run_model import predict_digit
 from digit_classifier.feedback_database import get_feedback_records
+from digit_classifier.submit_feedback import add_feedback_record
 
 st.title("Digit Classifier 🤖")
 st.markdown(
@@ -54,8 +55,11 @@ if 'prediction_timestamp' in st.session_state:
         if submitted:
             st.write("Thanks for the feedback! Will reward/punish 🤖 accordingly. (Joke - no robots were harmed in the making of this app)")
             st.write(f"Timestamp of prediction: {st.session_state['prediction_timestamp']}")
+            add_feedback_record()
+            st.session_state["feedback_records"] = get_feedback_records()
 
+if 'feedback_records' not in st.session_state:
+    st.session_state["feedback_records"] = get_feedback_records()
 
 st.subheader("Digit Classification Feedback History")
-feedback_records = get_feedback_records()
-st.dataframe(feedback_records, column_config={1:"Timestamp", 2:"Predicted Digit", 3:"True Digit", 4:"Confidence %"}, hide_index=True)
+st.dataframe(st.session_state["feedback_records"], column_config={1:"Timestamp", 2:"Predicted Digit", 3:"True Digit", 4:"Confidence %"}, hide_index=True)
