@@ -9,16 +9,28 @@ Objective: Build a MNIST digit Classifier. See https://programme.mlx.institute/i
 ### Prerequisites
 Needed:
 - Python (v3.9.6)
-- Poetry (`brew install poetry` or see https://python-poetry.org/ to install. v2.1.3 or higher)
+- Poetry for python package management (`brew install poetry` or see https://python-poetry.org/ to install. v2.1.3 or higher)
+- [colima](https://github.com/abiosoft/colima) for using docker without needing Docker Desktop (`brew install colima`) 
+    - For colima to work, install docker (`brew install docker`) 
 
 ### To run
-To run the python files:
+To run the digit_classifier python files:
 1. Ensure poetry is using python v3.9.6 (see commands listed: https://python-poetry.org/docs/managing-environments/ - e.g. using `poetry env use 3.9`)
 2. `poetry env activate` to use the poetry virtual environment created
     - (To deactivate virtual env if needed, run `deactivate`)
 3. `poetry install` to install project requirements
 
+#### Streamlit Front end
 To run front end, run the script: `streamlit run src/digit_classifier/app.py` and it will create a localhost URL to view. 
+
+### PostgreSQL database
+1. `colima start` to start up docker
+    - To stop colima and the VM, run `colima stop`
+2. Run `docker pull postgres` to get a PostgreSQL Docker image
+3. Run `docker run --name postgres_container -e POSTGRES_PASSWORD=<POSTGRES_PASSWORD> -d -p <DB_PORT>:<DB_PORT> -v postgres_data:/var/lib/postgresql/data postgres` to run the PostgreSQL container
+- Get the `.env` file from one of the Dev's (the only dev - Helen ;D) to get the `<POSTGRES_PASSWORD>` and `<DB_PORT>` values
+- To verify the docker is up and running, run `docker ps`
+4. Run the feedback_database/database_commands.py file and see how it interacts with the postgresSQL database, using the [psycopg2 package](https://www.psycopg.org/docs/install.html#build-prerequisites)
 
 ---
 
