@@ -32,10 +32,10 @@ Live example of the application: https://mnist-example.mlx.institute
     - ✅ Train it locally and confirm that it achieves a reasonable accuracy.
 2. **Interactive Front-End**
     - ✅ Create a web interface (using Streamlit) where users can draw a digit on a canvas or input area.
-    - When the user submits the drawing, the web app should run the trained PyTorch model to produce:
-        - Prediction: the model's guess at the digit (0–9).
-        - Confidence: the model's probability for its prediction.
-        - True Label: allow the user to manually input the correct digit so you can gather feedback.
+    - ✅ When the user submits the drawing, the web app should run the trained PyTorch model to produce:
+        - ✅ Prediction: the model's guess at the digit (0–9).
+        - ✅ Confidence: the model's probability for its prediction.
+        - ✅ True Label: allow the user to manually input the correct digit so you can gather feedback.
 3. **Logging with PostgreSQL**
 - Every time a prediction is made, log these details to a PostgreSQL database:
     - Timestamp
