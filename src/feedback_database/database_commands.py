@@ -19,9 +19,12 @@ cur.execute("INSERT INTO test_table (name) VALUES ('John Doe');")
 
 # Retrieve query results
 cur.execute("SELECT * FROM test_table")
+
 records = cur.fetchall()
 for record in records:
     print(record)
+
+cur.execute("DROP TABLE test_table")
 
 conn.commit()
 conn.close()
