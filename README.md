@@ -30,7 +30,7 @@ To run front end, run the script: `streamlit run src/digit_classifier/app.py` an
 3. Run `docker run --name postgres_container -e POSTGRES_PASSWORD=<POSTGRES_PASSWORD> -d -p <DB_PORT>:<DB_PORT> -v postgres_data:/var/lib/postgresql/data postgres` to run the PostgreSQL container
 - Get the `.env` file from one of the Dev's (the only dev - Helen ;D) to get the `<POSTGRES_PASSWORD>` and `<DB_PORT>` values
 - To verify the docker is up and running, run `docker ps`
-4. Run the feedback_database/database_commands.py file and see how it interacts with the postgresSQL database, using the [psycopg2 package](https://www.psycopg.org/docs/install.html#build-prerequisites)
+4. Run the src/digit_classifier/database_commands.py file and see how it interacts with the postgresSQL database, using the [psycopg2 package](https://www.psycopg.org/docs/install.html#build-prerequisites)
 
 ---
 

@@ -1,14 +1,16 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
-from digit_classifier.run_model import predict_digit
 from datetime import datetime
+
+from digit_classifier.run_model import predict_digit
+from digit_classifier.feedback_database import get_feedback_records
 
 st.title("Digit Classifier 🤖")
 st.markdown(
     """ 
     Digit Classifier 🤖 will try and predict the digit that you've drawn. :rainbow[**WOWSIES**]
 
-    Do your best drawing of a digit between 0-9 and hit 'Predict'
+    Do your best drawing of a digit between 0-9 and hit 'Classify'
     """
 )
 
@@ -34,7 +36,7 @@ def on_button_click():
         st.session_state['conf_percent'] = conf_percent
         st.session_state['prediction_timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-st.button(label="Predict", type="primary", on_click=on_button_click)
+st.button(label="Classify", type="primary", on_click=on_button_click)
 
 st.write(st.session_state['text'])
 
@@ -52,3 +54,8 @@ if 'prediction_timestamp' in st.session_state:
         if submitted:
             st.write("Thanks for the feedback! Will reward/punish 🤖 accordingly. (Joke - no robots were harmed in the making of this app)")
             st.write(f"Timestamp of prediction: {st.session_state['prediction_timestamp']}")
+
+
+st.subheader("Digit Classification Feedback History")
+feedback_records = get_feedback_records()
+st.dataframe(feedback_records, column_config={1:"Timestamp", 2:"Predicted Digit", 3:"True Digit", 4:"Confidence %"}, hide_index=True)
