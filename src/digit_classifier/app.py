@@ -3,8 +3,7 @@ from streamlit_drawable_canvas import st_canvas
 from datetime import datetime
 
 from digit_classifier.run_model import predict_digit
-from digit_classifier.feedback_database import get_feedback_records
-from digit_classifier.submit_feedback import add_feedback_record
+from digit_classifier.feedback_db_commands import add_feedback_record, get_feedback_records
 
 st.title("Digit Classifier 🤖")
 st.markdown(
