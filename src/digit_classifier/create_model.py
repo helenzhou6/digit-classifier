@@ -86,7 +86,7 @@ def train_step(model: torch.nn.Module,
     train_acc /= len(data_loader)
     print(f"Train loss: {train_loss:.5f} | Train accuracy: {(train_acc*100):.2f}%")
 
-epochs = 3 
+epochs = 3
 for epoch in range(epochs):
     print(f"---------\nTraining: Epoch {epoch + 1} out of {epochs}")
     train_step(data_loader=train_dataloader, 

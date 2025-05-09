@@ -1,5 +1,8 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
+from digit_classifier.run_model import predict_digit
+
+st.title("Digit Classifier")
 
 # Create a canvas component
 canvas_result = st_canvas(
@@ -13,3 +16,9 @@ canvas_result = st_canvas(
     point_display_radius=0,
     key="canvas",
 )
+
+def on_button_click():
+    if canvas_result.image_data is not None:
+        predict_digit(canvas_result.image_data)
+
+st.button(label="Classify", type="primary", on_click=on_button_click)
