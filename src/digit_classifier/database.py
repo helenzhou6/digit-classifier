@@ -29,7 +29,12 @@ def create_table_with_dummy_data():
                 conf_percent FLOAT
             )
             """)
-    cur.execute("INSERT INTO feedback (timestamp, predicted_digit, true_digit, conf_percent) VALUES (NOW(), '1', '4', '90.0');")
+    close_db_connection(conn)
+
+def _drop_table(): # to drop the table when needed
+    conn =  connect_to_db()
+    cur = conn.cursor()
+    cur.execute("DROP TABLE feedback")
     close_db_connection(conn)
 
 create_table_with_dummy_data()

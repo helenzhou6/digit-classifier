@@ -34,16 +34,15 @@ def on_button_click():
         st.session_state['text'] = f"Prediction made! 🤖 thinks it's {predicted_digit} and with {conf_percent:.1f}% confidence"
         st.session_state['predicted_digit'] = predicted_digit
         st.session_state['conf_percent'] = conf_percent
-        st.session_state['prediction_timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 st.button(label="Classify", type="primary", on_click=on_button_click)
 
 st.write(st.session_state['text'])
 
-if 'prediction_timestamp' in st.session_state:
+if 'predicted_digit' in st.session_state:
     with st.form(key="feedback-form"):
         st.write("How did 🤖 do? Give it feedback by writing in what the actual digit was")
-        num_input = st.number_input(
+        true_digit = st.number_input(
             label="Input the 'true' digit",
             min_value=0,
             max_value=9,
@@ -53,8 +52,7 @@ if 'prediction_timestamp' in st.session_state:
         submitted = st.form_submit_button("Submit")
         if submitted:
             st.write("Thanks for the feedback! Will reward/punish 🤖 accordingly. (Joke - no robots were harmed in the making of this app)")
-            st.write(f"Timestamp of prediction: {st.session_state['prediction_timestamp']}")
-            add_feedback_record()
+            add_feedback_record(st.session_state['predicted_digit'], true_digit, st.session_state['conf_percent'])
             st.session_state["feedback_records"] = get_feedback_records()
 
 if 'feedback_records' not in st.session_state:

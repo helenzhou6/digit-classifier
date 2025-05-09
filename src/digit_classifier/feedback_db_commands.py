@@ -1,9 +1,13 @@
+from psycopg2 import sql
 from digit_classifier.database import connect_to_db, close_db_connection
 
-def add_feedback_record():
-    conn =  connect_to_db()
+def add_feedback_record(predicted_digit, true_digit, conf_percent):
+    conn = connect_to_db()
     cur = conn.cursor()
-    cur.execute(f"INSERT INTO feedback (timestamp, predicted_digit, true_digit, conf_percent) VALUES (NOW(), '3', '4', '80.0');")
+    cur.execute(
+        sql.SQL("INSERT INTO {} (timestamp, predicted_digit, true_digit, conf_percent) VALUES (NOW(), %s, %s, %s)")
+            .format(sql.Identifier("feedback")),
+            [predicted_digit, true_digit, conf_percent])
     close_db_connection(conn)
 
 def get_feedback_records():
