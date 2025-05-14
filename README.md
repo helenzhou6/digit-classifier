@@ -18,7 +18,7 @@ To run the digit_classifier python files:
 1. Ensure poetry is using python v3.9.6 (see commands listed: https://python-poetry.org/docs/managing-environments/ - e.g. using `poetry env use 3.9`)
 2. `poetry env activate` to use the poetry virtual environment created
     - (To deactivate virtual env if needed, run `deactivate`)
-3. `poetry install` to install project requirements
+3. `poetry install` to install project requirements. The packages are split depending on which service you need running. To install frontend/database/model dependencies, run (delete as necessary )`poetry install --with frontend/database/model`, 
 
 ### 2. Model service/API
 Code for the model service/API can be found in `src/digit_classifier/model`
@@ -54,7 +54,7 @@ To run front end locally, ensure the following are running:
 Then run the script: `streamlit run src/digit_classifier/frontend/app.py` and it will create a localhost URL to view. 
 
 #### To set up and start the docker container
-1. To build the docker image named 'frontend' run `docker build --file Dockerfile.frontend -t frontend .`
+1. To build the docker image named 'frontend' run `docker build --file Dockerfile.frontend -t frontend .` (Change tag to `-t frontend:<tag>` if you want to add a tag)
 2. To run the built image, run `docker run -p 8500:8500 frontend`
 You should be able to see the app running here: http://127.0.0.1:8500
 
@@ -82,7 +82,7 @@ Live example of the application: https://mnist-example.mlx.institute
 4. **Containerization with Docker**
 - Use Docker to containerize:
     - The PyTorch model/service
-    - The Streamlit web app
+    - ✅ The Streamlit web app
     - The PostgreSQL database
 - Use Docker Compose to define your multi-container setup in a docker-compose.yml file.
 5. **Deployment**
