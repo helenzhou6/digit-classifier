@@ -58,6 +58,10 @@ Then run the script: `streamlit run src/digit_classifier/frontend/app.py` and it
 2. To run the built image, run `docker run -p 8500:8500 frontend`
 You should be able to see the app running here: http://127.0.0.1:8500
 
+## Docker compose
+In order to bypass the above steps and just run the docker container, ensure docker-compose has been installed (`brew install docker-compose`). Then use `docker composer up` to get it up and running
+- If you are working on the code, in order to rebuild the images, run `docker compose down` then `docker-compose build <name of image to rebuild>`
+
 ---
 
 ## Tasks
@@ -83,7 +87,7 @@ Live example of the application: https://mnist-example.mlx.institute
 - Use Docker to containerize:
     - The PyTorch model/service
     - ✅ The Streamlit web app
-    - The PostgreSQL database
+    - ✅ The PostgreSQL database
 - Use Docker Compose to define your multi-container setup in a docker-compose.yml file.
 5. **Deployment**
 - Set up a self-managed server (e.g., Hetzner's basic instance) or any other environment where you can install Docker and control the deployment end-to-end.
