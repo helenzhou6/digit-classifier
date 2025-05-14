@@ -2,12 +2,12 @@ import torch
 from torchvision.transforms import Compose, ToTensor, Resize
 from PIL import Image
 
-from digit_classifier.create_model import model_v1
+from digit_classifier.model import model
 
-def _predict_digit_using_model(tensor_digit):
-    model_v1.eval()
+def _predict_digit_using_model(tensor_digit, model):
+    model.eval()
     with torch.no_grad():
-        output = model_v1(tensor_digit)
+        output = model(tensor_digit)
         probs = torch.nn.functional.softmax(output, dim=1)
         conf, predicted_class = torch.max(probs, 1)
         predicted_digit = predicted_class.item()
@@ -35,4 +35,4 @@ def _process_image(uint8_img):
 
 def predict_digit(uint8_img):
     tensor_digit = _process_image(uint8_img)
-    return _predict_digit_using_model(tensor_digit)
+    return _predict_digit_using_model(tensor_digit, model)
