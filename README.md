@@ -34,8 +34,14 @@ This sets up the database within a docker container, and the frontend app will i
 If you have previously run the above set up steps (you can verify that it Exited by running `docker ps -a` and seeing the docker container with the name `postgres_container`), you can restart the container by running `docker restart postgres_container`.
 - To verify it is up and running, run `docker ps` and view status of `postgres_container`
 
+
 ### 3. Streamlit Front end
-To run front end, ensure the postgresSQL database docker container is up and running. Then run the script: `streamlit run src/digit_classifier/app.py` and it will create a localhost URL to view. 
+To run front end locally, ensure the postgresSQL database docker container is up and running. Then run the script: `streamlit run src/digit_classifier/app.py` and it will create a localhost URL to view. 
+
+#### To set up and start the docker container
+1. To build the docker image named 'frontend' run `docker build --file Dockerfile.frontend -t frontend .`
+2. To run the built image, run `docker run -p 8500:8500 frontend`
+You should be able to see the app running here: http://127.0.0.1:8500
 
 ---
 

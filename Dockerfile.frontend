@@ -1,0 +1,17 @@
+FROM python:3.9.6-slim
+
+ENV POETRY_VERSION=2.1.3 \
+    PYSETUP_PATH="/opt/pysetup"
+
+RUN pip install "poetry==$POETRY_VERSION"
+WORKDIR /app
+
+COPY ./poetry.lock ./pyproject.toml ./.env ./
+COPY ./README.md ./.env ./
+COPY ./src/digit_classifier ./src/digit_classifier
+
+RUN poetry install
+
+EXPOSE 8500
+
+CMD ["poetry", "run", "streamlit", "run", "src/digit_classifier/app.py", "--server.port=8500", "--server.address=0.0.0.0"]
