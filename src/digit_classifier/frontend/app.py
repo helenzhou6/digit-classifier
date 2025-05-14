@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 
-from digit_classifier.model.run_model import predict_digit
+from digit_classifier.frontend.request import call_model_api
 from digit_classifier.feedback_db_commands import add_feedback_record, get_feedback_records
 
 st.title("Digit Classifier 🤖")
@@ -29,10 +29,14 @@ if 'text' not in st.session_state:
 
 def on_button_click():
     if canvas_result.image_data is not None:
-        predicted_digit, conf_percent = predict_digit(canvas_result.image_data)
-        st.session_state['text'] = f"Prediction made! 🤖 thinks it's {predicted_digit} and with {conf_percent:.1f}% confidence"
-        st.session_state['predicted_digit'] = predicted_digit
-        st.session_state['conf_percent'] = conf_percent
+        result = call_model_api(canvas_result.image_data)
+        if result.values() and len(result.values()) is 2:
+            predicted_digit, conf_percent = result.values()
+            st.session_state['text'] = f"Prediction made! 🤖 thinks it's {predicted_digit} and with {conf_percent:.1f}% confidence"
+            st.session_state['predicted_digit'] = predicted_digit
+            st.session_state['conf_percent'] = conf_percent
+        else:
+            st.session_state['text'] = f"Something went wrong, see logs.. {result}"
 
 st.button(label="Classify", type="primary", on_click=on_button_click)
 

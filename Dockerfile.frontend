@@ -14,4 +14,4 @@ RUN poetry install
 
 EXPOSE 8500
 
-CMD ["poetry", "run", "streamlit", "run", "src/digit_classifier/app.py", "--server.port=8500", "--server.address=0.0.0.0"]
+CMD ["poetry", "run", "streamlit", "run", "src/digit_classifier/frontend/app.py", "--server.port=8500", "--server.address=0.0.0.0"]
