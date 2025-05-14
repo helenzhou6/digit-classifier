@@ -1,8 +1,7 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 
-from digit_classifier.frontend.call_api import predict_digit_api, get_feedback_records
-from digit_classifier.database.feedback_cmd import add_feedback_record
+from digit_classifier.frontend.call_api import predict_digit_api, get_feedback_records, add_feedback_record
 
 st.title("Digit Classifier 🤖")
 st.markdown(
