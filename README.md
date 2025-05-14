@@ -42,9 +42,16 @@ This sets up the database within a docker container, and the frontend app will i
 If you have previously run the above set up steps (you can verify that it Exited by running `docker ps -a` and seeing the docker container with the name `postgres_container`), you can restart the container by running `docker restart postgres_container`.
 - To verify it is up and running, run `docker ps` and view status of `postgres_container`
 
+#### To run the database API
+Run `uvicorn digit_classifier.database.api:appdb --reload --host 0.0.0.0 --port 8001`, which will run it on localhost port 8001. Check http://localhost:8001/healthcheck for a response to see it up and running
+
 ### 4. Streamlit Front end
 Code for the streamlit front end can be found in `src/digit_classifier/frontend`
-To run front end locally, ensure the postgresSQL database docker container is up and running. Then run the script: `streamlit run src/digit_classifier/frontend/app.py` and it will create a localhost URL to view. 
+To run front end locally, ensure the following are running:
+- postgresSQL database docker container
+- database API
+- model service API
+Then run the script: `streamlit run src/digit_classifier/frontend/app.py` and it will create a localhost URL to view. 
 
 #### To set up and start the docker container
 1. To build the docker image named 'frontend' run `docker build --file Dockerfile.frontend -t frontend .`

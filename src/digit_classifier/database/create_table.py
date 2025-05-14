@@ -19,5 +19,3 @@ def _drop_table(): # to drop the table when needed
     cur = conn.cursor()
     cur.execute("DROP TABLE feedback")
     close_db_connection(conn)
-
-create_table_with_dummy_data()
