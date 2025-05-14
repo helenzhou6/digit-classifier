@@ -13,7 +13,7 @@ def add_feedback_record(predicted_digit, true_digit, conf_percent):
 def get_feedback_records():
     conn =  connect_to_db()
     cur = conn.cursor()
-    cur.execute("SELECT timestamp, predicted_digit, true_digit, conf_percent FROM feedback ORDER BY timestamp DESC")
+    cur.execute("SELECT TO_CHAR(timestamp, 'YYYY-MM-DD HH24:MI:SS') AS formatted_datetime, predicted_digit, true_digit, conf_percent FROM feedback ORDER BY formatted_datetime DESC")
     records = cur.fetchall()
     close_db_connection(conn)
     return records

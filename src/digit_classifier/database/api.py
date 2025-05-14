@@ -8,7 +8,8 @@ create_table_with_dummy_data()
 
 @appdb.get("/getrecords")
 async def getrecords():
-      return get_feedback_records()
+      feedback_records = get_feedback_records()
+      return feedback_records
 
 @appdb.get("/healthcheck")
 async def healthcheck():

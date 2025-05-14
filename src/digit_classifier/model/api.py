@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile
 import numpy
 
 from digit_classifier.model.run_model import predict_digit
-from digit_classifier.model.model import init_model
+from digit_classifier.model.init_model import init_model
 
 app = FastAPI()
 model = init_model()
