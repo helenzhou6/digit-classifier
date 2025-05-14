@@ -17,5 +17,14 @@ services:
       - "8001:8001"
     depends_on:
       - db
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./Dockerfile.frontend
+    ports:
+      - "8500:8500"
+    depends_on:
+      - databaseapp
 volumes:
   postgres_data:
