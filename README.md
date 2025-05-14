@@ -20,7 +20,13 @@ To run the digit_classifier python files:
     - (To deactivate virtual env if needed, run `deactivate`)
 3. `poetry install` to install project requirements
 
-### 2. PostgreSQL database
+### 2. Model service/API
+The model has been trained on the MNIST dataset. The code ensures that the model is usable by ensuring the model loss is < 0.5 and model accuracy is > 90% when testing on the MNIST testing dataset.
+- To load the service locally, use `uvicorn digit_classifier.model.main:app --reload`.
+    - This runs the backend on port 8000, to check it is up and running go to: http://localhost:8000/healthcheck to see a response.
+
+### 3. PostgreSQL database
+A postgreSQL database is used to log the feedback of the user, along with the prediction and confidence level. All entries to the database is displayed to the user on the frontend.
 #### To set up and start the docker container
 1. `colima start` to start up docker
     - To stop colima and the VM, run `colima stop`
@@ -34,8 +40,7 @@ This sets up the database within a docker container, and the frontend app will i
 If you have previously run the above set up steps (you can verify that it Exited by running `docker ps -a` and seeing the docker container with the name `postgres_container`), you can restart the container by running `docker restart postgres_container`.
 - To verify it is up and running, run `docker ps` and view status of `postgres_container`
 
-
-### 3. Streamlit Front end
+### 4. Streamlit Front end
 To run front end locally, ensure the postgresSQL database docker container is up and running. Then run the script: `streamlit run src/digit_classifier/app.py` and it will create a localhost URL to view. 
 
 #### To set up and start the docker container
