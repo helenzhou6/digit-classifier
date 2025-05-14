@@ -4,7 +4,7 @@ Application for Machine Learning Institute program.
 
 Objective: Build a MNIST digit Classifier. See https://programme.mlx.institute/interview/project
 
-## Dev
+## Dev - running the app locally
 
 ### Prerequisites
 Needed:
@@ -13,14 +13,15 @@ Needed:
 - [colima](https://github.com/abiosoft/colima) for using docker without needing Docker Desktop (`brew install colima`) 
     - For colima to work, install docker (`brew install docker`) 
 
-### To run
+### 1. Initial python set up
 To run the digit_classifier python files:
 1. Ensure poetry is using python v3.9.6 (see commands listed: https://python-poetry.org/docs/managing-environments/ - e.g. using `poetry env use 3.9`)
 2. `poetry env activate` to use the poetry virtual environment created
     - (To deactivate virtual env if needed, run `deactivate`)
 3. `poetry install` to install project requirements
 
-### PostgreSQL database
+### 2. PostgreSQL database
+#### To set up and start the docker container
 1. `colima start` to start up docker
     - To stop colima and the VM, run `colima stop`
 2. Run `docker pull postgres` to get a PostgreSQL Docker image
@@ -29,8 +30,12 @@ To run the digit_classifier python files:
 - To verify the docker is up and running, run `docker ps`
 This sets up the database within a docker container, and the frontend app will interact with using the [psycopg2 package](https://www.psycopg.org/docs/install.html#build-prerequisites)
 
-#### Streamlit Front end
-To run front end, run the script: `streamlit run src/digit_classifier/app.py` and it will create a localhost URL to view. 
+#### To restart docker container
+If you have previously run the above set up steps (you can verify that it Exited by running `docker ps -a` and seeing the docker container with the name `postgres_container`), you can restart the container by running `docker restart postgres_container`.
+- To verify it is up and running, run `docker ps` and view status of `postgres_container`
+
+### 3. Streamlit Front end
+To run front end, ensure the postgresSQL database docker container is up and running. Then run the script: `streamlit run src/digit_classifier/app.py` and it will create a localhost URL to view. 
 
 ---
 
