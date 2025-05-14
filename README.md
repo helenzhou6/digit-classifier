@@ -27,6 +27,7 @@ The model has been trained on the MNIST dataset. The code ensures that the model
     - This runs the backend on port 8000, to check it is up and running go to: http://localhost:8000/healthcheck to see a response.
 
 ### 3. PostgreSQL database
+Code for the postgreSQL database set up and SQL queries can be found in `src/digit_classifier/database`
 A postgreSQL database is used to log the feedback of the user, along with the prediction and confidence level. All entries to the database is displayed to the user on the frontend.
 #### To set up and start the docker container
 1. `colima start` to start up docker

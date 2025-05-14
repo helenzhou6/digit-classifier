@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 
 from digit_classifier.frontend.request import call_model_api
-from digit_classifier.feedback_db_commands import add_feedback_record, get_feedback_records
+from digit_classifier.database.feedback_cmd import add_feedback_record, get_feedback_records
 
 st.title("Digit Classifier 🤖")
 st.markdown(

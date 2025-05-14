@@ -1,5 +1,5 @@
 from psycopg2 import sql
-from digit_classifier.database import connect_to_db, close_db_connection
+from digit_classifier.database.connection import connect_to_db, close_db_connection
 
 def add_feedback_record(predicted_digit, true_digit, conf_percent):
     conn = connect_to_db()
