@@ -39,7 +39,6 @@ def init_model():
         model.load_state_dict(torch.load('model.pth'))
     else:
         print("model.pth does not exist, training and testing the model...")
-        print("model.pth exists, loading model state...")
         model = MNISTModel(input_shape,
             hidden_units,
             output_shape
