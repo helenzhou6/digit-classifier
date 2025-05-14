@@ -29,6 +29,7 @@ The model has been trained on the MNIST dataset. The code ensures that the model
 ### 3. PostgreSQL database
 Code for the postgreSQL database set up and SQL queries can be found in `src/digit_classifier/database`
 A postgreSQL database is used to log the feedback of the user, along with the prediction and confidence level. All entries to the database is displayed to the user on the frontend.
+
 #### To set up and start the docker container
 1. `colima start` to start up docker
     - To stop colima and the VM, run `colima stop`
@@ -53,14 +54,16 @@ To run front end locally, ensure the following are running:
 - model service API
 Then run the script: `streamlit run src/digit_classifier/frontend/app.py` and it will create a localhost URL to view. 
 
-#### To set up and start the docker container
-1. To build the docker image named 'frontend' run `docker build --file Dockerfile.frontend -t frontend .` (Change tag to `-t frontend:<tag>` if you want to add a tag)
-2. To run the built image, run `docker run -p 8500:8500 frontend`
-You should be able to see the app running here: http://127.0.0.1:8500
-
 ## Docker compose
-In order to bypass the above steps and just run the docker container, ensure docker-compose has been installed (`brew install docker-compose`). Then use `docker composer up` to get it up and running
+In order to bypass the above steps and just run several docker containers at once (namely the postgreSQL database docker, database API docker, model API docker and frontend docker), ensure docker-compose has been installed (`brew install docker-compose`).
+Then use `docker composer up` to get it up and running. See the entire end to end application on http://0.0.0.0:8500
 - If you are working on the code, in order to rebuild the images, run `docker compose down` then `docker-compose build <name of image to rebuild>`
+
+### To set up and start the docker container
+Starting individual docker containers is a bit redundant since they rely on connections to other docker containers. However leaving this here just for reference.
+1. To build the docker image named 'frontend/database/model' (delete as necessary) run `docker build --file Dockerfile.<frontend/database/model> -t <frontend/database/model> .`
+2. To run the built image, run `docker run -p <port number>:<port number> <frontend/database/model>`
+You should be able to see the app running here: http://127.0.0.1:<port number>
 
 ---
 
@@ -83,12 +86,12 @@ Live example of the application: https://mnist-example.mlx.institute
     - ✅ Timestamp
     - ✅ Predicted digit
     - ✅ User-provided true label
-4. **Containerization with Docker**
-- Use Docker to containerize:
-    - The PyTorch model/service
+4. ✅ **Containerization with Docker**
+- ✅ Use Docker to containerize:
+    - ✅ The PyTorch model/service
     - ✅ The Streamlit web app
     - ✅ The PostgreSQL database
-- Use Docker Compose to define your multi-container setup in a docker-compose.yml file.
+- ✅ Use Docker Compose to define your multi-container setup in a docker-compose.yml file.
 5. **Deployment**
 - Set up a self-managed server (e.g., Hetzner's basic instance) or any other environment where you can install Docker and control the deployment end-to-end.
 - Deploy your containerized application to the server and make it accessible via a public IP or domain.

@@ -1,0 +1,17 @@
+FROM python:3.9.6-slim
+
+ENV POETRY_VERSION=2.1.3 
+
+RUN pip install "poetry==$POETRY_VERSION"
+WORKDIR /app
+
+COPY ./poetry.lock ./pyproject.toml ./
+COPY ./README.md ./.env ./
+COPY ./src/digit_classifier/__init__.py ./src/digit_classifier/__init__.py 
+COPY ./src/digit_classifier/model ./src/digit_classifier/model
+
+RUN poetry install --with model
+
+EXPOSE 8000
+
+CMD ["poetry", "run", "uvicorn", "digit_classifier.model.api:app", "--host", "0.0.0.0", "--port", "8000"]
