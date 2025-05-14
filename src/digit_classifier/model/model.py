@@ -2,7 +2,7 @@ from torchvision import datasets
 import torch
 from torch import nn
 import os.path
-from digit_classifier.create_model import train_model, test_model 
+from digit_classifier.model.create_model import train_model, test_model 
 
 torch.manual_seed(42)
 class MNISTModel(nn.Module):
@@ -27,16 +27,23 @@ class_names = datasets.MNIST(
 ).classes
 output_shape=len(class_names)
 device="cpu"
-model = MNISTModel(input_shape,
-    hidden_units,
-    output_shape
-).to(device)
 
-model_pth_path = 'model.pth'
-if os.path.exists(model_pth_path):
-    print("model.pth exists, loading model state...")
-    model.load_state_dict(torch.load('model.pth'))
-else:
-    print("model.pth does not exist, training and testing the model...")
-    train_model(model)
-    test_model(model)
+def init_model():
+    model_pth_path = 'model.pth'
+    if os.path.exists(model_pth_path):
+        print("model.pth exists, loading model state...")
+        model = MNISTModel(input_shape,
+            hidden_units,
+            output_shape
+        ).to(device)
+        model.load_state_dict(torch.load('model.pth'))
+    else:
+        print("model.pth does not exist, training and testing the model...")
+        print("model.pth exists, loading model state...")
+        model = MNISTModel(input_shape,
+            hidden_units,
+            output_shape
+        ).to(device)
+        train_model(model)
+        test_model(model)
+    return model

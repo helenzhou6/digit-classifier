@@ -2,7 +2,7 @@ import torch
 from torchvision.transforms import Compose, ToTensor, Resize
 from PIL import Image
 
-from digit_classifier.model import model
+from digit_classifier.model.model import init_model
 
 def _predict_digit_using_model(tensor_digit, model):
     model.eval()
@@ -34,5 +34,6 @@ def _process_image(uint8_img):
     return tensor_digit
 
 def predict_digit(uint8_img):
+    model = init_model()
     tensor_digit = _process_image(uint8_img)
     return _predict_digit_using_model(tensor_digit, model)

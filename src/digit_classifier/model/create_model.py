@@ -1,4 +1,3 @@
-# To run file, refer to README
 import torch
 from torch.utils.data import DataLoader
 from torch import nn
