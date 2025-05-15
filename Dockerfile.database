@@ -1,17 +1,27 @@
-FROM python:3.9.6-slim
+FROM python:3.9.6-slim AS base
 
-ENV POETRY_VERSION=2.1.3 
-
+ENV POETRY_VERSION=2.1.3
 RUN pip install "poetry==$POETRY_VERSION"
+ENV PATH=/root/.poetry/bin:$PATH
+
+WORKDIR /app
+COPY ./poetry.lock ./pyproject.toml ./
+COPY ./README.md ./
+COPY ./src/digit_classifier/__init__.py ./src/digit_classifier/__init__.py 
+
+RUN python -m venv --copies /app/venv
+RUN . /app/venv/bin/activate && poetry install --with database
+
+FROM python:3.9.6-slim AS runtime
+
+COPY --from=base /app/venv /app/venv/
+ENV PATH=/app/venv/bin:$PATH
+
 WORKDIR /app
 
-COPY ./poetry.lock ./pyproject.toml ./
-COPY ./README.md ./.env ./
-COPY ./src/digit_classifier/__init__.py ./src/digit_classifier/__init__.py 
+COPY ./.env ./
 COPY ./src/digit_classifier/database ./src/digit_classifier/database
-
-RUN poetry install --with database
 
 EXPOSE 8001
 
-CMD ["poetry", "run", "uvicorn", "digit_classifier.database.api:appdb", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["uvicorn", "digit_classifier.database.api:appdb", "--host", "0.0.0.0", "--port", "8001"]
