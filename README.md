@@ -224,4 +224,4 @@ Live example of the application: https://mnist-example.mlx.institute
 ## Resources
 - Learn Machine learning on pytorch: https://www.learnpytorch.io/03_pytorch_computer_vision/ 
 - Multi stage docker builds with poetry and python: https://gabnotes.org/lighten-your-python-image-docker-multi-stage-builds/ 
-- Deploying to an AWS EC2 instance (including installing Docker and docker compose): https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67 
+- Deploying to an AWS EC2 instance (including installing Docker and docker compose): https://medium.com/@umairnadeem/deploy-to-aws-using-docker-compose-simple-210d71f43e67 and https://medium.com/@mudasirhaji/how-to-deploy-multiple-application-containers-using-docker-compose-on-amazon-ec2-367e39437fbd (I prefer the latter article since the last command that runs docker command in detached mode solved an issue I had which I thought was networking but turned out not to be. Whilst the first one assumes that your laptop will forever be running?!)
