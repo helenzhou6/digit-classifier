@@ -1,22 +1,39 @@
 # Digit Classifier
 
-Application for Machine Learning Institute program. 
+Objective: Build a MNIST digit Classifier (as part of the application for the Machine Learning Institute program.). See https://programme.mlx.institute/interview/project
 
-Objective: Build a MNIST digit Classifier. See https://programme.mlx.institute/interview/project
-
-⚠️ **Disclaimer**: This codebase is a Proof of Concept, completed over 4 days! It is not production level code or deployment. Read it at your own risk 😉 ⚠️ 
+⚠️ **DISCLAIMER**: This codebase is a Proof of Concept, completed over 4 days (see daily log below)! It is not production level code or deployment. Read it at your own risk 😉 ⚠️ 
 
 ## See it in action
 
-The public URL isn't always up and running since AWS EC2 instances aren't cheap (especially over time!)
+The public URL isn't always up and running since AWS EC2 instances aren't _that_ cheap (especially over time!).
+Public URL:
 
-Here's evidence of it running:
+Here's some screenshots to evidence it running:
+
 - Where an AWS EC2 instance is up and running, with the public IP address highlighted:
+
 ![EC2 instance](https://github.com/user-attachments/assets/81802fb0-0840-4f50-a4c0-7b58eebf483c)
+
 - Going to the port 8500 of the public IP:
+
 ![Access](https://github.com/user-attachments/assets/4db00d4f-42f9-432b-b7de-185767c37bf5)
-- See how it updates the postgreSQL database with an entry
+
+- See how it updates the postgreSQL database with an entry:
+
 ![Update](https://github.com/user-attachments/assets/e5480dbb-a8ee-4c72-8a54-274a9dab7fe0)
+
+## Architecture
+- Python codebase, split into the different apps (the frontend, database and model). Code is under src/
+    - **frontend**: generates the frontend where the user can draw a 0-9 digit, and see what the model predicted digit is with confidence level. User can input feedback (the 'true' digit), and see all feedback records
+    - **Database service/API**: used to store the feedback records
+    - **Model service/API**: has the machine learning model, trained and tested on the MNIST dataset.
+- poetry as the package manager. The packages are split into what is required for each app:
+    - **frontend**: streamlit used
+    - **Database service/API**: uses a postgreSQL database, and fastapi + uvicorn for the API interface that the frontend can interact with
+    - **Model service/API**: uses pytorch to train and test a model. fastapi + uvicorn for the API interface that the frontend can interact with
+- Dockerfiles for each app to build and deploy, and docker compose for a multi-container setup
+- AWS (with EC2 instance launced) used to host and allow public IP access
 
 ## Dev - running the app locally
 
@@ -26,6 +43,17 @@ Needed:
 - Poetry for python package management (`brew install poetry` or see https://python-poetry.org/ to install. v2.1.3 or higher)
 - [colima](https://github.com/abiosoft/colima) for using docker without needing Docker Desktop (`brew install colima`) 
     - For colima to work, install docker (`brew install docker`) 
+- .env file needs to be populated correctly (get this from Helen). Example contents:
+    ```python
+    POSTGRES_USERNAME=xxx
+    POSTGRES_PASSWORD=xxx
+    DB_HOST=xxx
+    DB_PORT=xxx
+    MODEL_API_URL=xxx
+    DATABASE_API_URL=xxx
+    ```
+
+Skip down to the docker-compose instructions for the most efficient way to get it up and running locally
 
 ### 1. Initial python set up
 To run the digit_classifier python files:
@@ -119,15 +147,33 @@ sudo docker-compose up
 - Edit inbound rules and add a new inbound rule with type = Custom TCP, Protocol = TCP and Port range = 8500 (matches the frontend port), and source either your IP address if you only need to access it, otherwise 0.0.0.0/0 for the whole new world
 6. You should be able to access it on the address http://<public ip address>:8500
 
-### Clean up / delete resources
+#### Clean up / delete resources
 - Terminate your EC2 instance
 - See EBS > Volumes and delete any volumes created
 - See EC2 > Network interfaces and delete any created
 - See EC2 > Security Groups to delete any created
 
 ---
+## Daily log
+Note: Github Pilot/cursor/claude and other AI generating code was **not** used. Just good old internet searches.
 
-## Tasks
+**Day 1: Thursday 8th May 2025**
+- Started by trying to read up on PyTorch - first time using it, and first time training up a machine learning model. Found a tutorial to follow along, and managed to get a PyTorch model trained and tested.
+- Started to work on the Streamlit frontend. Also first time using it so trying it out, surprised how quickly you can get stuff up!
+
+**Day 2: Friday 9th May 2025**
+- Created a postgreSQL database and wrote code to store and view feedback records
+- Finished the frontend interface, including drawable canvas and feedback input and display
+
+**Day 3: Wednesday 14th May 2025**
+- Split the codebase into different services (frontend, database and model), and ensure frontend all linked up through APIs
+- Dockerised each of the different services and used docker-compose for the multi container setup
+
+**Day 4: Thursday 15th May 2025**
+- Set up AWS EC2 instance and deployed the codebase
+- README write up
+
+### Tasks
 For full details, see: https://programme.mlx.institute/interview/project
 
 Live example of the application: https://mnist-example.mlx.institute
