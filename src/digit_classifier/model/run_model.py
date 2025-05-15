@@ -1,13 +1,13 @@
-import torch
+from torch import nn, no_grad, max, float32, Size
 from torchvision.transforms import Compose, ToTensor, Resize
 from PIL import Image
 
 def _predict_digit_using_model(tensor_digit, model):
     model.eval()
-    with torch.no_grad():
+    with no_grad():
         output = model(tensor_digit)
-        probs = torch.nn.functional.softmax(output, dim=1)
-        conf, predicted_class = torch.max(probs, 1)
+        probs = nn.functional.softmax(output, dim=1)
+        conf, predicted_class = max(probs, 1)
         predicted_digit = predicted_class.item()
         conf_percent = conf.item()*100
     return predicted_digit, conf_percent
@@ -18,9 +18,9 @@ _transform_to_tensor = Compose([
 ])
 
 def _validate_digit_properties(tensor_digit):
-    if tensor_digit.dtype is not torch.float32:
+    if tensor_digit.dtype is not float32:
           raise Exception(f"Incorrect type - tensor digit should be torch.float32, instead was {tensor_digit.dtype}")
-    if tensor_digit.shape != torch.Size([1, 28, 28]):
+    if tensor_digit.shape != Size([1, 28, 28]):
           raise Exception(f"Incorrect type - tensor digit should be torch.Size([1, 28, 28]), instead was {tensor_digit.shape}")
     
 def _process_image(uint8_img):

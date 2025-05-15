@@ -1,10 +1,9 @@
 from torchvision import datasets
-import torch
-from torch import nn
+from torch import nn, Tensor, manual_seed, load
 import os.path
 from digit_classifier.model.create_model import train_model, test_model 
 
-torch.manual_seed(42)
+manual_seed(42)
 class MNISTModel(nn.Module):
     def __init__(self, input_shape: int, hidden_units: int, output_shape: int):
         super().__init__()
@@ -15,7 +14,7 @@ class MNISTModel(nn.Module):
             nn.Linear(in_features=hidden_units, out_features=output_shape),
             nn.ReLU()
         )
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: Tensor):
         return self.layer_stack(x)
     
 input_shape = 784 
@@ -36,7 +35,7 @@ def init_model():
             hidden_units,
             output_shape
         ).to(device)
-        model.load_state_dict(torch.load('model.pth'))
+        model.load_state_dict(load('model.pth'))
     else:
         print("model.pth does not exist, training and testing the model...")
         model = MNISTModel(input_shape,
