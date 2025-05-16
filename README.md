@@ -5,9 +5,9 @@ Objective: Build a MNIST digit Classifier (as part of the application for the Ma
 ⚠️ **DISCLAIMER**: This codebase is a Proof of Concept, completed over 4 days (see daily log below)! It is not production level code or deployment. Read it at your own risk 😉 ⚠️ 
 
 ## See it in action
-Public URL to live application, BUT read notes below: http://ec2-3-10-138-208.eu-west-2.compute.amazonaws.com:8500/
+Public URL to live application, BUT read notes below: http://ec2-35-179-160-229.eu-west-2.compute.amazonaws.com:8500/
 
-👉 **NOTE**! The public URL isn't always up and running since AWS EC2 instances aren't _that_ cheap (especially over time!). This above link will be live during working hours (9am until 5pm on weekdays), until Tuesday 20th May 2025. Contact me if after this point you need it live.
+👉 **NOTE**! The public URL isn't always up and running since AWS EC2 instances aren't _that_ cheap (especially over time!). This above link will be live during working hours (9am until 5pm on weekdays), until Thursday 22nd May 2025. Contact me if after this point you need it live.
 
 👉 **ALSO**! It only works with HTTP not HTTPS, in case you open it on mobile, make sure it's HTTP not HTTPS. Maybe one day it will support HTTPS...see 'Things I wish I had time to do' section below. 
 
