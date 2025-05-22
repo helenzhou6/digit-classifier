@@ -1,17 +1,13 @@
 # Digit Classifier
 
-Objective: Build a MNIST digit Classifier (as part of the application for the Machine Learning Institute program.). See https://programme.mlx.institute/interview/project
+Objective: Build a MNIST digit Classifier (as part of the application for the Machine Learning Institute program. Update: I got in, horray! Summer 2025 cohort). See https://programme.mlx.institute/interview/project
 
 ⚠️ **DISCLAIMER**: This codebase is a Proof of Concept, completed over 4 days (see daily log below)! It is not production level code or deployment. Read it at your own risk 😉 ⚠️ 
 
 ## See it in action
-Public URL to live application, will be listed in the github project description (under 'About' part of this page) BUT read notes below.
+ The public URL is no longer live since AWS EC2 instances aren't _that_ cheap (especially over time!). Contact me if you need it live. Below are some screenshots/videos to evidence it all worked anyway:
 
-👉 **NOTE**! The public URL isn't always up and running since AWS EC2 instances aren't _that_ cheap (especially over time!). The public URL will only be live and provided during working hours (9am until 5pm on weekdays), until Thursday 22nd May 2025. Contact me if after this point you need it live.
-
-👉 **ALSO**! It only works with HTTP not HTTPS, in case you open it on mobile, make sure it's HTTP not HTTPS. Maybe one day it will support HTTPS...see 'Things I wish I had time to do' section below. 
-
-Below are some screenshots to evidence it all worked anyway:
+![recording](https://github.com/user-attachments/assets/443ff04d-d36a-497e-8807-9fcadab2011a)
 
 - Where an AWS EC2 instance is up and running, with the public IP address highlighted:
 
@@ -45,7 +41,7 @@ Needed:
 - Poetry for python package management (`brew install poetry` or see https://python-poetry.org/ to install. v2.1.3 or higher)
 - [colima](https://github.com/abiosoft/colima) for using docker without needing Docker Desktop (`brew install colima`) 
     - For colima to work, install docker (`brew install docker`) 
-- .env file needs to be populated correctly (get this from Helen). Example contents:
+- .env file needs to be populated correctly (get this from Helen, or the environment variables in this repo). Example contents:
     ```python
     POSTGRES_USERNAME=xxx
     POSTGRES_PASSWORD=xxx
@@ -133,12 +129,12 @@ Add tags to all AWS resources produced for good practice.
 - Security group: either select an existing, or create a new one and ensure only your IP address can be used to SSH into instance
 3. Once EC2 instance has launched, note the public IP address (a series of numbers and dots)
 4. Run the following commands (replace the `<...>` where necessary) in order to SSH into the EC2 instance, install docker + docker-compose and deploy the apps
-```console
-scp -r -i <name of pem file>.pem <location from ~ of code> ec2-user@<public IP address>:~/
-ssh -i <name of pem file>.pem ec2-user@<public IP address>
+```bash
+scp -r -i <name of pem file>.pem <location from ~ of code> ec2-user@<public IP address>:~/ # to copy files over to server
+ssh -i <name of pem file>.pem ec2-user@<public IP address> # SSH log in
 sudo yum update
 sudo yum install docker # then hit y
-sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose #d downloads docker compose
 sudo chmod +x /usr/local/bin/docker-compose
 docker-compose version # check 2.36.0 or above
 sudo service docker start
@@ -148,13 +144,23 @@ sudo docker-compose up -d # the -d is detacthed mode, i.e. makes sure it keeps r
 5. Edit the existing security group
 - Navigate on the AWS console to EC2 > Security Groups and select the one associated with the EC2 instance
 - Edit inbound rules and add a new inbound rule with type = Custom TCP, Protocol = TCP and Port range = 8500 (matches the frontend port), and source either your IP address if you only need to access it, otherwise 0.0.0.0/0 for the whole new world
-- You should then be able to access it on the address http://<public ip address>:8500
+- You should then be able to access it on the address http://<public ip address>:8500 (note it will be HTTP not HTTPS)
+
+#### Restarting the instance
+- If you are stopping and starting the instance, and have already done the above steps once, you can just do the following:
+```bash
+ssh -i <name of pem file>.pem ec2-user@<public IP address> # SSH log in
+sudo service docker start
+cd <location of the code on the EC2 instance>
+sudo docker-compose up -d
+```
 
 #### Clean up / delete resources
 - Terminate your EC2 instance
 - See EBS > Volumes to check the volumes associated have been deleted
 - See EC2 > Network interfaces to check they have been deleted
 - See EC2 > Security Groups to delete any created
+It may be useful to set up a cloudwatch function that will track your spending and alert when it goes above.
 
 ---
 ## Daily log
